@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Scores Dashboard | Advanced Analytics</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-trophy"></i>
+                <span>ScoreMaster Pro</span>
+            </div>
+            <div class="nav-menu">
+                <a href="#dashboard" class="nav-link active"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="#analytics" class="nav-link"><i class="fas fa-chart-pie"></i> Analytics</a>
+                <a href="#players" class="nav-link"><i class="fas fa-users"></i> Players</a>
+                <a href="#leaderboard" class="nav-link"><i class="fas fa-list-ol"></i> Leaderboard</a>
+            </div>
+            <div class="nav-actions">
+                <button id="themeToggle" class="btn-icon">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button id="exportBtn" class="btn-icon">
+                    <i class="fas fa-download"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Header Stats -->
+        <div class="header-stats">
+            <div class="stat-card primary">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-content">
+                    <span class="stat-value" id="totalPlayers">20</span>
+                    <span class="stat-label">Total Players</span>
+                </div>
+                <div class="stat-change up">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+2 this week</span>
+                </div>
+            </div>
+            
+            <div class="stat-card success">
+                <div class="stat-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="stat-content">
+                    <span class="stat-value" id="avgScore">85.4</span>
+                    <span class="stat-label">Avg. Score</span>
+                </div>
+                <div class="stat-change up">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+1.2%</span>
+                </div>
+            </div>
+            
+            <div class="stat-card warning">
+                <div class="stat-icon">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <div class="stat-content">
+                    <span class="stat-value" id="topScore">95</span>
+                    <span class="stat-label">Top Score</span>
+                </div>
+                <div class="stat-change">
+                    <i class="fas fa-minus"></i>
+                    <span>No change</span>
+                </div>
+            </div>
+            
+            <div class="stat-card danger">
+                <div class="stat-icon">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <div class="stat-content">
+                    <span class="stat-value" id="scoreRange">25</span>
+                    <span class="stat-label">Score Range</span>
+                </div>
+                <div class="stat-change down">
+                    <i class="fas fa-arrow-down"></i>
+                    <span>-3%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content-grid">
+            <!-- Left Column -->
+            <div class="left-column">
+                <!-- Player Scores Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-list-ol"></i> Player Scores</h2>
+                        <div class="card-actions">
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="searchInput" placeholder="Search player...">
+                            </div>
+                            <button id="sortToggle" class="btn-icon">
+                                <i class="fas fa-sort-amount-down"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="scores" class="scores-container"></div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="pagination">
+                            <button id="prevPage" class="btn-icon"><i class="fas fa-chevron-left"></i></button>
+                            <span id="pageInfo">Page 1 of 3</span>
+                            <button id="nextPage" class="btn-icon"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add New Player Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-user-plus"></i> Add New Player</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="newPlayerName"><i class="fas fa-user"></i> Player Name</label>
+                                <input type="text" id="newPlayerName" placeholder="Enter player name">
+                            </div>
+                            <div class="form-group">
+                                <label for="newPlayerScore"><i class="fas fa-star"></i> Initial Score</label>
+                                <input type="number" id="newPlayerScore" placeholder="Enter initial score" value="0">
+                            </div>
+                        </div>
+                        <button id="addPlayerButton" class="btn btn-success">
+                            <i class="fas fa-plus-circle"></i> Add Player
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="right-column">
+                <!-- Update Score Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-edit"></i> Update Score</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="playerSelect"><i class="fas fa-user-check"></i> Select Player</label>
+                            <div class="select-wrapper">
+                                <i class="fas fa-caret-down"></i>
+                                <select id="playerSelect">
+                                    <option value="">Select a player</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="scoreInput"><i class="fas fa-star"></i> New Score</label>
+                            <div class="score-input-wrapper">
+                                <input type="number" id="scoreInput" placeholder="Enter new score" min="0" max="100">
+                                <div class="score-slider">
+                                    <input type="range" id="scoreSlider" min="0" max="100" value="50">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="scoreReason"><i class="fas fa-comment"></i> Reason for Change</label>
+                            <textarea id="scoreReason" placeholder="Optional: Add a note about this score change..." rows="2"></textarea>
+                        </div>
+                        
+                        <button id="updateButton" class="btn btn-primary">
+                            <i class="fas fa-sync-alt"></i> Update Score
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-bolt"></i> Quick Actions</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="actions-grid">
+                            <button id="getTopScorersButton" class="action-btn success">
+                                <i class="fas fa-crown"></i>
+                                <span>Top 3 Scorers</span>
+                            </button>
+                            <button id="getBottomScorersButton" class="action-btn warning">
+                                <i class="fas fa-life-ring"></i>
+                                <span>Bottom 3 Scorers</span>
+                            </button>
+                            <button id="calculateAverageButton" class="action-btn info">
+                                <i class="fas fa-calculator"></i>
+                                <span>Calculate Average</span>
+                            </button>
+                            <button id="randomizeScores" class="action-btn secondary">
+                                <i class="fas fa-random"></i>
+                                <span>Randomize Scores</span>
+                            </button>
+                            <button id="exportData" class="action-btn primary">
+                                <i class="fas fa-file-export"></i>
+                                <span>Export Data</span>
+                            </button>
+                            <button id="resetScoresButton" class="action-btn danger">
+                                <i class="fas fa-redo"></i>
+                                <span>Reset All</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-chart-pie"></i> Score Distribution</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="distribution-chart">
+                            <div class="chart-bar" data-range="90-100" style="--percentage: 25%">
+                                <span class="bar-label">90-100</span>
+                                <div class="bar-fill"></div>
+                                <span class="bar-value">25%</span>
+                            </div>
+                            <div class="chart-bar" data-range="80-89" style="--percentage: 40%">
+                                <span class="bar-label">80-89</span>
+                                <div class="bar-fill"></div>
+                                <span class="bar-value">40%</span>
+                            </div>
+                            <div class="chart-bar" data-range="70-79" style="--percentage: 25%">
+                                <span class="bar-label">70-79</span>
+                                <div class="bar-fill"></div>
+                                <span class="bar-value">25%</span>
+                            </div>
+                            <div class="chart-bar" data-range="60-69" style="--percentage: 10%">
+                                <span class="bar-label">60-69</span>
+                                <div class="bar-fill"></div>
+                                <span class="bar-value">10%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="analytics-section">
+            <div class="card full-width">
+                <div class="card-header">
+                    <h2><i class="fas fa-chart-line"></i> Performance Analytics</h2>
+                    <div class="time-filter">
+                        <button class="time-btn active">All Time</button>
+                        <button class="time-btn">This Month</button>
+                        <button class="time-btn">This Week</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="analytics-grid">
+                        <div class="analytics-chart">
+                            <canvas id="scoreTrendChart"></canvas>
+                        </div>
+                        <div class="analytics-stats">
+                            <h3><i class="fas fa-info-circle"></i> Insights</h3>
+                            <div class="insight-item positive">
+                                <i class="fas fa-arrow-up"></i>
+                                <div class="insight-content">
+                                    <span class="insight-title">Most Improved</span>
+                                    <span class="insight-value">Alice (+15 points)</span>
+                                </div>
+                            </div>
+                            <div class="insight-item negative">
+                                <i class="fas fa-arrow-down"></i>
+                                <div class="insight-content">
+                                    <span class="insight-title">Needs Attention</span>
+                                    <span class="insight-value">Frank (-8 points)</span>
+                                </div>
+                            </div>
+                            <div class="insight-item neutral">
+                                <i class="fas fa-chart-area"></i>
+                                <div class="insight-content">
+                                    <span class="insight-title">Average Trend</span>
+                                    <span class="insight-value">+2.3% this month</span>
+                                </div>
+                            </div>
+                            <div class="insight-item info">
+                                <i class="fas fa-bullseye"></i>
+                                <div class="insight-content">
+                                    <span class="insight-title">Target Achievement</span>
+                                    <span class="insight-value">65% of players</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="recent-activity">
+            <div class="card full-width">
+                <div class="card-header">
+                    <h2><i class="fas fa-history"></i> Recent Activity</h2>
+                </div>
+                <div class="card-body">
+                    <div class="activity-list">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">
+        <div class="toast-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="toast-content">
+            <span id="toastTitle" class="toast-title">Success</span>
+            <span id="toastMessage" class="toast-message">Operation completed successfully</span>
+        </div>
+        <button class="toast-close">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-exclamation-triangle"></i> Confirmation</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="modalMessage">Are you sure you want to perform this action?</p>
+            </div>
+            <div class="modal-footer">
+                <button id="modalCancel" class="btn btn-secondary">Cancel</button>
+                <button id="modalConfirm" class="btn btn-danger">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="playerModal" class="modal">
+        <div class="modal-content player-modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-circle"></i> Player Details</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="player-info">
+                    <div class="player-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="player-details">
+                        <h2 id="modalPlayerName">Player Name</h2>
+                        <div class="player-score-large">
+                            <span id="modalPlayerScore">0</span>
+                            <span class="score-label">Current Score</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="player-stats">
+                    <div class="player-stat">
+                        <span class="stat-label">Rank</span>
+                        <span id="modalPlayerRank" class="stat-value">#0</span>
+                    </div>
+                    <div class="player-stat">
+                        <span class="stat-label">Performance</span>
+                        <span id="modalPlayerPerformance" class="stat-value">Average</span>
+                    </div>
+                    <div class="player-stat">
+                        <span class="stat-label">Last Updated</span>
+                        <span id="modalPlayerUpdated" class="stat-value">Today</span>
+                    </div>
+                </div>
+                <div class="player-history">
+                    <h4><i class="fas fa-history"></i> Score History</h4>
+                    <div class="history-list">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="editPlayer" class="btn btn-primary">
+                    <i class="fas fa-edit"></i> Edit Player
+                </button>
+                <button id="deletePlayer" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Delete Player
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3><i class="fas fa-trophy"></i> ScoreMaster Pro</h3>
+                <p>Advanced player management and analytics dashboard for competitive gaming and sports.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Features</h4>
+                <ul>
+                    <li>Real-time Score Tracking</li>
+                    <li>Advanced Analytics</li>
+                    <li>Performance Insights</li>
+                    <li>Data Export</li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#dashboard">Dashboard</a></li>
+                    <li><a href="#analytics">Analytics</a></li>
+                    <li><a href="#players">Player Management</a></li>
+                    <li><a href="#leaderboard">Leaderboard</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Connect</h4>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-discord"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; <span id="currentYear"></span> ScoreMaster Pro. All rights reserved. | Version 2.1.0</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
