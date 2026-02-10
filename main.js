@@ -929,12 +929,9 @@ document.addEventListener("DOMContentLoaded", () => {
     addActivity("update", "System", "Dashboard loaded successfully");
   }
 
-  // ===== INITIALIZATION =====
-  function initializeApp() {
-    // Set current year
-    elements.currentYear.textContent = new Date().getFullYear();
 
-    // Load theme preference
+  function initializeApp() {
+    elements.currentYear.textContent = new Date().getFullYear();
     const savedTheme = localStorage.getItem("scoreboard-theme");
     if (savedTheme) {
       appState.theme = savedTheme;
@@ -945,16 +942,15 @@ document.addEventListener("DOMContentLoaded", () => {
           : '<i class="fas fa-sun"></i>';
     }
 
-    // Initialize chart
     initializeChart();
 
-    // Setup event listeners
+
     setupEventListeners();
 
-    // Initial display
+
     displayScores();
 
-    // Add welcome message
+
     setTimeout(() => {
       showToast(
         "Welcome to ScoreMaster Pro! Dashboard loaded successfully.",
@@ -964,6 +960,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 1000);
   }
 
-  // Start the application
+
   initializeApp();
 });
